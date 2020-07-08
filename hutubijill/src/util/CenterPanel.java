@@ -11,6 +11,8 @@ import javax.swing.JFrame;
  */
 import javax.swing.JPanel;
 
+import gui.panel.WorkingPanel;
+
 public class CenterPanel extends JPanel{
 	private double rate; //拉伸比列
 	private JComponent c; //要显示的组件
@@ -48,6 +50,9 @@ public class CenterPanel extends JPanel{
 		Component[] cs = getComponents();
 		for (Component c : cs) {
 			remove(c);
+		}
+		if (p instanceof WorkingPanel) {
+			((WorkingPanel) p).updateData();
 		}
 		add(p);
 		this.updateUI();

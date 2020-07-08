@@ -13,11 +13,14 @@ import javax.swing.JTextField;
 
 import org.jdesktop.swingx.JXDatePicker;
 
+import entity.Category;
 import gui.model.CategoryComboBoxModel;
+import listener.RecordListener;
+import service.CategoryService;
 import util.ColorUtil;
 import util.GUIUtil;
 
-public class RecordPanel extends JPanel{
+public class RecordPanel extends WorkingPanel{
 	static {
 		GUIUtil.userLNF();
 	}
@@ -31,7 +34,7 @@ public class RecordPanel extends JPanel{
 	 public JTextField tfSpend = new JTextField("0");
 	 
 	 public CategoryComboBoxModel cbModel  = new CategoryComboBoxModel();
-	 public JComboBox<String> cbCategory = new JComboBox<String>(cbModel);
+	 public JComboBox<Category> cbCategory = new JComboBox<Category>(cbModel);
 	 public JTextField  tfComment = new JTextField("");
 	 public JXDatePicker dateprick = new JXDatePicker(new Date());
 	 
@@ -58,10 +61,40 @@ public class RecordPanel extends JPanel{
 		 this.add(pInput,BorderLayout.NORTH);
 		 this.add(pSubmit,BorderLayout.CENTER);
 		 
+		 addListener();
 	 }
 	 
 	 public static void main(String[] args) {
 		GUIUtil.showPanel(RecordPanel.instance);
+	}
+
+	public Category getSelectedCategory() {
+		return (Category) cbModel.getSelectedItem();
+	}
+
+	@Override
+	public void updateData() {
+		cbModel.cs = new CategoryService().list();
+		cbCategory.updateUI();
+		resetInput();
+		tfSpend.grabFocus();
+		
+	}
+	//该方法时更新完后返回初始化组件默认值的
+	public void resetInput() {
+		tfComment.setText("");
+		tfSpend.setText("0");
+		dateprick.setDate(new  Date());
+		if (cbModel.cs.size()!=0) {
+			cbCategory.setSelectedIndex(0);
+		}
+	}
+
+	@Override
+	public void addListener() {
+		RecordListener l = new RecordListener();
+		bSubmit.addActionListener(l);
+		
 	}
 	 
 }

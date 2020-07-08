@@ -8,19 +8,21 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import listener.ConfigListener;
+import service.ConfigService;
 import util.ColorUtil;
 import util.GUIUtil;
 
 /*
  * 设置月消费总额和 mysql 数据库的面板
  */
-public class ConfigPanel extends JPanel {
+public class ConfigPanel extends WorkingPanel {
 	static {
 		GUIUtil.userLNF();
 	}
 	public static ConfigPanel instance = new ConfigPanel();
 	JLabel lBudget = new JLabel("本月预算(￥)");
-	public JTextField tfBudget = new JTextField("0");
+	public JTextField tfBudget = new JTextField(0);
 	
 	JLabel lMysql = new JLabel("mysql安装目录");
 	public JTextField  tfMysqlPath = new JTextField("");
@@ -42,8 +44,25 @@ public class ConfigPanel extends JPanel {
 		this.setLayout(new BorderLayout());
 		this.add(pInput,BorderLayout.NORTH);
 		this.add(pSubmit,BorderLayout.CENTER);
+		
+		addListener();
+	}
+	
+	public  void addListener() {
+		ConfigListener cl = new ConfigListener();
+		bsubmit.addActionListener(cl);
 	}
 	public static void main(String[] args) {
 		GUIUtil.showPanel(ConfigPanel.instance);
+	}
+
+	@Override
+	public void updateData() {
+		String budget = ConfigService.get(ConfigService.budget);
+		String mysqlpath = ConfigService.get(ConfigService.mysqlPath);
+		tfBudget.setText(budget);
+		tfMysqlPath.setText(mysqlpath);
+		tfBudget.grabFocus();
+		
 	}
 }

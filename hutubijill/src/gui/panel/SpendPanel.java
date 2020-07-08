@@ -10,11 +10,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import javafx.scene.shape.CircleBuilder;
+import page.SpendPage;
+import service.SpendService;
 import util.CircleProgressBar;
 import util.ColorUtil;
 import util.GUIUtil;
 
-public class SpendPanel extends JPanel{
+public class SpendPanel extends WorkingPanel{
 	static {
 		GUIUtil.userLNF();
 	}
@@ -86,6 +88,32 @@ public class SpendPanel extends JPanel{
 	
 	public static void main(String[] args) {
 		GUIUtil.showPanel(SpendPanel.instance);
+	}
+	@Override
+	public void updateData() {
+		SpendPage p = new SpendService().getSpendPage();
+		vMonthSpend.setText(p.monthSpend);
+		vTodaySpend.setText(p.todaySpend);
+		vAvgSpendPerDay.setText(p.avgSpendPerDay);
+		vMonthleft.setText(p.monthLeftDay);
+		vDayAvgAvailable.setText(p.dayAvgAvailable);
+		vMonthLeftDay.setText(p.monthLeftDay);
+		
+		bar.setProgress(p.usagePercentage);
+		if (p.isOverSpend) {
+			vMonthSpend.setForeground(ColorUtil.warningColor);
+			vTodaySpend.setForeground(ColorUtil.warningColor);
+			vDayAvgAvailable.setForeground(ColorUtil.warningColor);
+		}else {
+			vMonthSpend.setForeground(ColorUtil.blueColor);
+			vTodaySpend.setForeground(ColorUtil.blueColor);
+			vDayAvgAvailable.setForeground(ColorUtil.blueColor);
+		}
+	}
+	@Override
+	public void addListener() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
